@@ -33,9 +33,19 @@ class Infrastructure:
         General purpose generation of an income
         :return: A value in libra
         """
-        if (self.incomeDie != 0):
-            return self.incomeBase + nDX(self.incomeNumberOfDice, self.incomeDie)
+        if self.incomeDie != 0:
+            return nDX(self.incomeNumberOfDice, self.incomeDie, self.incomeBase)
         return self.incomeBase
+
+    def GenerateMaintenance(self):
+        """
+        General purpose generation of a maintenance cost
+        :return:
+        """
+        if self.maintenanceDie != 0:
+            return nDX(self.maintananceNumberOfDice, self.maintenanceDie, self.maintenanceBase)
+        return self.maintenanceBase
+
 
 
 class Demesne:
