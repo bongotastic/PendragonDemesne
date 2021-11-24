@@ -12,7 +12,7 @@ def nDX(n, X, modifier=0):
     """
     tally = modifier
     for i in range(n):
-        tally += randint(1, X + 1)
+        tally += randint(1, X)
     return tally
 
 def nD6(n=1, modifier=0):
