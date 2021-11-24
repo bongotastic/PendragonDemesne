@@ -27,7 +27,6 @@ class Infrastructure:
         self.rollAnnual = []
         self.checkAnnual = []
 
-
     def GenerateIncome(self):
         """
         General purpose generation of an income

@@ -1,11 +1,10 @@
-from Demesne import Infrastructure
+import BookOfManorManoralLuck
+from Demesne import Infrastructure, Demesne
 
 if __name__ == '__main__':
-    # Tes infrastructure
-    myInfrastructure = Infrastructure()
-    myInfrastructure.incomeBase = 2
-    myInfrastructure.incomeDie = 3
-    myInfrastructure.incomeNumberOfDice = 1
 
-    print(myInfrastructure.GenerateIncome())
+    myDemesne = Demesne()
+
+    luck = BookOfManorManoralLuck.ManoralLuck()
+    luck.Compute(485, myDemesne, None)
 

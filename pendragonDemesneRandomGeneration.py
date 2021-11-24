@@ -64,7 +64,7 @@ class randomTableEntry:
         
         # Are we over the upperBound
         if self.upperBound:
-            if self.upperBound > targetNumber:
+            if self.upperBound < targetNumber:
                 return None
             
         return self.emitOutcome()
@@ -89,6 +89,14 @@ class randomTable:
         
         # Collection of outcomes
         self.outcomes = []
+
+    def AddOutcome(self, newEntry):
+        """
+        Add an entry to the table when building it.
+        :param newEntry:
+        :return:
+        """
+        self.outcomes.append(newEntry)
         
     def RollDice(self, modifier = 0):
         """
