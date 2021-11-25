@@ -58,6 +58,11 @@ class DemesneYear:
         self.harvestResult = ""
         self.emergencyIncome = 0
 
+        self.stewardshipDelta = 0
+        self.stewardshipEpiphany = False
+
+        self.wanderingMerchant = False
+
         self.maintenanceLevel = ""
 
         self.storyElements = []
@@ -77,6 +82,15 @@ class DemesneYear:
     def AddExpenses(self, cost):
         self.expenses += cost
 
+    def AddIncome(self, income):
+        self.income += income
+
+    def AdjustCashFlow(self, delta):
+        if delta < 0:
+            self.AddExpenses(delta)
+        else:
+            self.AddIncome(delta)
+
 class Demesne:
     infrastructures: List[Infrastructure]
     #deJureTo: Demesne
@@ -90,6 +104,24 @@ class Demesne:
 
         # List of infrastructure
         self.infrastructures = []
+
+        # Years
+        self.years = {}
+
+        # Base Fate
+        self.baseFate = 0
+
+    def GetYear(self, year):
+        """
+        Getter for a specific year. Create an instance if it does not already exists.
+        :param year:
+        :return: A DemesneYear instance
+        """
+        if year in self.years:
+            return self.years[year]
+
+        self.years[year] = DemesneYear(self, year)
+        return self.years[year]
 
     def GenerateIncome(self):
         """

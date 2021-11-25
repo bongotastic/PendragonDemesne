@@ -50,7 +50,7 @@ class randomTableEntry:
         :return: Ultimately, should return a string.
         """
         demesneYear.storyElements.append(self.outcome)
-        return self.outcome
+        return self
     
     def TestTarget(self, targetNumber):
         """
@@ -76,9 +76,37 @@ class randomTableEntryMoney(randomTableEntry):
         randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
         self.costAdjustment = 0
 
-    def emitOutcome(self, demesne, demesneYear):
+    def emitOutcome(self, demesneYear):
+        randomTableEntry.emitOutcome(self, demesneYear)
         demesneYear.AdjustCashFlow(self.costAdjustment)
-        return self.outcome
+        return self
+
+class randomTableEntryFate(randomTableEntry):
+    def __init__(self, lowerBound, upperBound, outcome, nDice, die, modifier):
+        randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
+        self.nDice = nDice
+        self.die = die
+        self.modifier = modifier
+
+    def emitOutcome(self, demesneYear):
+        fate = nDX(self.nDice, self.die, self.modifier)
+        self.outcome += " (%d)"%(fate)
+        randomTableEntry.emitOutcome(self, demesneYear)
+        demesneYear.AdjustFate(fate)
+        return self
+
+class randomTableEntryStewardship(randomTableEntry):
+    def __init__(self, lowerBound, upperBound, outcome, delta):
+        randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
+        self.deltaStewardship = delta
+
+    def emitOutcome(self, demesneYear):
+        randomTableEntry.emitOutcome(self, demesneYear)
+        if self.deltaStewardship is None:
+            demesneYear.stewardshipEpiphany = True
+        else:
+            demesneYear.stewardshipDelta += self.deltaStewardship
+        return self
     
 class randomTable:
     """

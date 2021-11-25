@@ -1,12 +1,11 @@
 import BookOfManorManoralLuck
 from Demesne import Infrastructure, Demesne, DemesneYear
+from PendragonManager import PendragonManager, PendragonDemesneStore
 
 if __name__ == '__main__':
-
-    myDemesne = Demesne()
-    myDemesneYear = DemesneYear(myDemesne, 485)
-
-
-    luck = BookOfManorManoralLuck.ManoralLuck()
-    luck.Compute(485, myDemesneYear)
+    # Create the engine
+    myengine = PendragonManager()
+    myengine.demesnes = PendragonDemesneStore().LoadTestSet()
+    myengine.WinterPhase()
+    myengine
 
