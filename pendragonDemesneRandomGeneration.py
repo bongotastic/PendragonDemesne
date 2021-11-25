@@ -43,11 +43,13 @@ class randomTableEntry:
         # Returned outcome
         self.outcome = outcome
 
-    def emitOutcome(self):
+
+    def emitOutcome(self, demesneYear):
         """
         Base class method to return the content of the outcome.
         :return: Ultimately, should return a string.
         """
+        demesneYear.storyElements.append(self.outcome)
         return self.outcome
     
     def TestTarget(self, targetNumber):
@@ -60,14 +62,23 @@ class randomTableEntry:
         # Are we under the lowerBound? 
         if self.lowerBound is not None:
             if self.lowerBound > targetNumber:
-                return None
+                return False
         
         # Are we over the upperBound
         if self.upperBound:
             if self.upperBound < targetNumber:
-                return None
+                return False
             
-        return self.emitOutcome()
+        return True
+
+class randomTableEntryMoney(randomTableEntry):
+    def __init__(self, lowerBound, upperBound, outcome, costAdjustment):
+        randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
+        self.costAdjustment = 0
+
+    def emitOutcome(self, demesne, demesneYear):
+        demesneYear.AdjustCashFlow(self.costAdjustment)
+        return self.outcome
     
 class randomTable:
     """
@@ -106,7 +117,7 @@ class randomTable:
         """
         return nDX(self.numberOfDice, self.sidedness, modifier)
     
-    def Roll(self, modifer = 0):
+    def Roll(self, demesneYear, modifer = 0):
         """
         Roll against the table
         :param modifer: 
@@ -117,8 +128,5 @@ class randomTable:
         
         # Scan outcomes
         for outcomeObject in self.outcomes:
-            outcome = outcomeObject.TestTarget(diceOutcome)
-            if outcome is not None:
-                return outcome
-        
-        return None
+            if outcomeObject.TestTarget(diceOutcome):
+                return outcomeObject.emitOutcome(demesneYear)

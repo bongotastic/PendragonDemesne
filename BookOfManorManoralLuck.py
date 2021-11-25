@@ -1,6 +1,27 @@
 from typing import Dict, Any
 
-from pendragonDemesneRandomGeneration import randomTable, randomTableEntry
+from pendragonDemesneRandomGeneration import randomTable, randomTableEntry, nDX
+
+
+class rteCalamityLiegeVisit(randomTableEntry):
+    def __init__(self, lowerBound, upperBound):
+        randomTableEntry.__init__(self, 1,2, "Liege Lord Visit drains your funds.")
+
+    def emitOutcome(self, demesneYear):
+        demesneYear.storyElements.append(self.outcome)
+        demesneYear.AddExpenses(6)
+
+class rteCalamityFateAdjust(randomTableEntry):
+    def __init__(self, lowerBound, upperBound, outcome, nDice, die, modifier):
+        randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
+        self.nDice = nDice
+        self.die = die
+        self.modifier = modifier
+
+    def emitOutcome(self, demesneYear):
+        fate = nDX(self.nDice, self.die, self.modifier)
+        self.outcome += " (%d)"%(fate)
+        demesneYear.AdjustFate(fate)
 
 class ManoralLuck:
     luckTables: Dict[int, randomTable]
@@ -45,7 +66,12 @@ class ManoralLuck:
         table.AddOutcome(randomTableEntry(5, 6, "Benefit"))
         self.luckTables[539] = table
 
-    def Compute(self, year, demesne, demesneYear):
+        self.calamityTable.AddOutcome(rteCalamityLiegeVisit(1,2))
+        self.calamityTable.AddOutcome(randomTableEntry(3,3, "Unusual dispute in course (Challenge 30)"))
+        self.calamityTable.AddOutcome(rteCalamityFateAdjust(4,4, "Bandit raid!", 1, 6, -1))
+        self.calamityTable.AddOutcome(randomTableEntry(5,20, "Hired Steward died."))
+
+    def Compute(self, year, demesneYear):
         # Select at table
         if year <= 518:
             table = self.luckTables[518]
@@ -58,4 +84,4 @@ class ManoralLuck:
         elif year <= 566:
             table = self.luckTables[566]
 
-        return print(table.Roll())
+        table.Roll(demesneYear)

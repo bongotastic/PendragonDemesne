@@ -46,6 +46,36 @@ class Infrastructure:
         return self.maintenanceBase
 
 
+class DemesneYear:
+    def __init__(self, demesne, year):
+        self.year = year
+        self.demesne = demesne
+
+        self.assisedRent = 0
+        self.income = 0
+        self.expenses = 0
+        self.misfortune = 0
+        self.harvestResult = ""
+        self.emergencyIncome = 0
+
+        self.maintenanceLevel = ""
+
+        self.storyElements = []
+
+    def SetAssizedRent(self, rent):
+        self.assisedRent = rent
+
+    def SetIncome(self, income):
+        self.income = income
+
+    def GenerateMisfortune(self):
+        self.misfortune = nDX(3,6,5)
+
+    def AdjustFate(self, delta):
+        self.misfortune += delta
+
+    def AddExpenses(self, cost):
+        self.expenses += cost
 
 class Demesne:
     infrastructures: List[Infrastructure]
