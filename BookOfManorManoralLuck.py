@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
 from pendragonDemesneRandomGeneration import randomTable, randomTableEntry, nDX, randomTableEntryFate, \
-    randomTableEntryMoney, randomTableEntryStewardship
+    randomTableEntryMoney, randomTableEntryStewardship, randomTableEntrySubtable
 
 
 class ManoralLuck:
@@ -73,13 +73,18 @@ class ManoralLuck:
         self.benefitTable.AddOutcome(randomTableEntryStewardship(11, 11, "Great year for cows!", 4))
         self.benefitTable.AddOutcome(randomTableEntryStewardship(12, 12, "Great year for sheeps!", 3))
         self.benefitTable.AddOutcome(randomTableEntry(13, 13, "Wandering merchant sells rare tapestry for cheap."))
-        self.benefitTable.AddOutcome(randomTableEntry(14, 15, "Excellent horse trained (extra)")) #subtable
+        self.benefitTable.AddOutcome(randomTableEntrySubtable(14, 15, "Excellent horse trained: ", self.BuildExcellentHorseSubtable()))
         self.benefitTable.AddOutcome(randomTableEntryFate(16, 16, "Little crop pest this year", 0, 0, -2))
         self.benefitTable.AddOutcome(randomTableEntryMoney(17, 18, "Extra construction", 2))
         self.benefitTable.AddOutcome(randomTableEntryMoney(19, 19, "Boon in construction", 5))
         self.benefitTable.AddOutcome(randomTableEntry(20, 20, "New spring bring plenty of irrigation forever."))
 
-
+    def BuildExcellentHorseSubtable(self):
+        excellentHorse = randomTable("Excellent horse", 1, 6)
+        excellentHorse.AddOutcome(randomTableEntry(1, 3, "Courser"))
+        excellentHorse.AddOutcome(randomTableEntry(4, 5, "Charger"))
+        excellentHorse.AddOutcome(randomTableEntry(6, 6, "Large Charger"))
+        return excellentHorse
 
     def GenerateWeather(self):
         self.weather = nDX(3,6, 5)
@@ -103,8 +108,7 @@ class ManoralLuck:
         outcome = table.Roll(demesneYear)
 
         if outcome.outcome == "Benefit":
-            #outcome = self.benefitTable.Roll(demesneYear)
-            pass
+            outcome = self.benefitTable.Roll(demesneYear)
         elif outcome.outcome == "Calamity":
             outcome = self.calamityTable.Roll(demesneYear)
 

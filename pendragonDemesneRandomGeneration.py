@@ -90,7 +90,7 @@ class randomTableEntryFate(randomTableEntry):
 
     def emitOutcome(self, demesneYear):
         fate = nDX(self.nDice, self.die, self.modifier)
-        self.outcome += " (%d)"%(fate)
+        self.outcome += " (%s%d Fate)"%((lambda x: "+" if x > 0 else "")(fate), fate)
         randomTableEntry.emitOutcome(self, demesneYear)
         demesneYear.AdjustFate(fate)
         return self
@@ -107,6 +107,23 @@ class randomTableEntryStewardship(randomTableEntry):
         else:
             demesneYear.stewardshipDelta += self.deltaStewardship
         return self
+
+class randomTableEntrySubtable(randomTableEntry):
+    """
+    Generic entry expanding into a subtable.
+    """
+    def __init__(self, lowerBound, upperBound, outcome, subtable, modifier = 0):
+        randomTableEntry.__init__(self, lowerBound, upperBound, outcome)
+        self.modifier = modifier
+
+        # instance of a subtable
+        self.subtable = subtable
+
+        for entry in self.subtable.outcomes:
+            entry.outcome = self.outcome + entry.outcome
+
+    def emitOutcome(self, demesneYear):
+        return self.subtable.Roll(demesneYear, modifer=self.modifier)
     
 class randomTable:
     """

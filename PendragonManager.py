@@ -8,7 +8,7 @@ class PendragonDemesneStore:
 
     def LoadTestSet(self):
         out = []
-        for i in range(10):
+        for i in range(4):
             out.append(Demesne())
         return out
 
